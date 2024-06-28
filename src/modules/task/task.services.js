@@ -1,24 +1,28 @@
 const taskModel = require("../../models/task");
 const userModel = require("../../models/user");
+const pager = require("../../utils/pager");
 
 
 
-
-async function findAllPaginated(params) {
+async function paginated(params) {
   let perPage = params.perPage ? params.perPage : 10;
   let page = Math.max(0, params.page);
   let filter = params.filter ? params.filter : {};
   let sort = params.sort ? params.sort : {};
 
   let count = await taskModel.countDocuments(filter);
-  let data = await taskModel
-    .find(filter)
-    .limit(perPage)
-    .skip(perPage * page)
-    .sort(sort)
-    .populate('user')
-    .exec();
+  let data = await taskModel.find(filter)
+      .limit(perPage)
+      .skip(perPage * page)
+      .sort(sort)
+      
+      .populate('user') 
+      .select('name description user')
+      .exec();
 
+
+
+      console.log('Data:', data);
   return pager.createPager(page, data, count, perPage);
 }
 
@@ -83,6 +87,7 @@ async function remove(id) {
 }
 
 module.exports = {
+  paginated,
   create,
   findAll,
   findById,

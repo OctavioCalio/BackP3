@@ -124,13 +124,8 @@
         "description": "",
         "parameters": [
           {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
+            "name": "params",
+            "in": "header",
             "type": "string"
           }
         ],

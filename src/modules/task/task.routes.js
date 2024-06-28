@@ -7,26 +7,17 @@ const router = express.Router();
 router.get("/api/tasks", async (req, res) => {
   // #swagger.tags = ['Tareas']  
   try {
-      const { page, limit } = req.query;
-      if (page && limit) {
-        const tasks = await taskService.findAllPaginated(page, limit);
-        res.status(200).json(tasks);
-      } else {
-        const tasks = await taskService.findAll();
-        res.status(200).json(tasks);
-      }
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
+    params = JSON.parse(req.headers['params']) 
+    let paginated = await taskService.paginated(params)
+    return res.status(200).send(paginated);
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(error);
+  }
   });
 
 
-
-/*
-Esta ruta acepta los parámetros page y limit 
-como parámetros de consulta para controlar 
-la paginación.
-*/
 
 
 // GET /api/tasks/:id
